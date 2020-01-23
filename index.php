@@ -7,6 +7,13 @@
             width: 1910px;
             height: 1054px;
         }
+        #frame-0 {
+            display: block;
+            float: left;
+            width: 49%;
+            height: 49%;
+            margin: 0.4%;
+        }
         #frame-1 {
             display: block;
             float: left;
@@ -28,13 +35,6 @@
             height: 49%;
             margin: 0.4%;
         }
-        #frame-4 {
-            display: block;
-            float: left;
-            width: 49%;
-            height: 49%;
-            margin: 0.4%;
-        }
         video {
             object-fit: fill;
         }
@@ -42,7 +42,7 @@
 </head>
 <body>
 
-        <div id='frame-1'>
+        <div id='frame-0'>
         <?php
             $files = array_slice(scandir('videos/1/'), 2);
             $images = preg_grep('~\.(jpeg|jpg|png)$~', $files);
@@ -60,7 +60,7 @@
             }
         ?>
         </div>
-        <div id='frame-2'>
+        <div id='frame-1'>
         <?php
             $files = array_slice(scandir('videos/2/'), 2);
             $images = preg_grep('~\.(jpeg|jpg|png)$~', $files);
@@ -78,7 +78,7 @@
             }
         ?>
         </div>
-        <div id='frame-3'>
+        <div id='frame-2'>
         <?php
             $files = array_slice(scandir('videos/3/'), 2);
             $images = preg_grep('~\.(jpeg|jpg|png)$~', $files);
@@ -96,7 +96,7 @@
             }
         ?>
         </div>
-        <div id='frame-4'>
+        <div id='frame-3'>
         <?php
             $files = array_slice(scandir('videos/4/'), 2);
             $images = preg_grep('~\.(jpeg|jpg|png)$~', $files);
@@ -118,6 +118,7 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script>
     function check(id) {
+        var status = 0;
         var images = $('#frame-'+ id +' img').map(function () {
             return this.id;
         }).get();
@@ -125,30 +126,34 @@
             return this.id;
         }).get();
 
-        //console.log([images, videos]);
-
         function next_video(i) {
             if(i<videos.length) {
                 $('#'+videos[i]).show();
                 $('#'+videos[i])[0].play();
+                status = $('#'+videos[i]);
 
                 $('#'+videos[i]).on('ended',function(){
-                    $('#'+videos[i]).stop();
-                    $('#'+videos[i]).hide();
-                    i++;
-                    next_video(i);
+                    if(status != 0) {
+                        status[0].pause();
+                        status[0].currentTime = 1;
+                        status.hide();
+                        status = 0;
+
+                        $('#'+videos[i]).unbind();
+                        i++;
+                        if(i<videos.length) {
+                            next_video(i);
+                        }
+                        else {
+                            next_video(0);
+                        }
+                    }
                 });
             }
             else if(images.length > 0) {
-                $('#'+videos[i]).stop();
-                $('#'+videos[i]).hide();
-
                 next_image(0);
             }
             else {
-                $('#'+videos[i]).stop();
-                $('#'+videos[i]).hide();
-
                 next_video(0);
             }
         }
@@ -159,7 +164,7 @@
                     $('#'+images[i]).hide();
                     i++;
                     next_image(i);
-                }, 30000);
+                }, 15000);
             }
             else {
                 $('#'+images[i]).hide();
@@ -181,10 +186,10 @@
         }
     }
     $( document ).ready(function() {
+        check(0);
         check(1);
         check(2);
         check(3);
-        check(4);
     });
 </script>
 </body>
