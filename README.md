@@ -1,6 +1,9 @@
-First Version of Video Player
+# Video Player
+Application for Raspberry Pi Kiosk, for video preview of product.
 
-Current working resolution: 1920:1080
-Working file types: mp4, png, jpeg, jpg
+## Usage
+Add videos and photos to: /videos/{ 1, 2, 3, 4 }<br>
+Current working resolution: 1920:1080<br>
+Working file types: mp4, png, jpeg, jpg<br>
 
-Add videos and photos to: /videos/{ 1, 2, 3, 4 }
+
